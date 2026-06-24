@@ -1,0 +1,253 @@
+/* =============================================================
+   The Vinyl Vault — Submit an Album Review (page-specific)
+   Requires css/main.css (design tokens, base, navbar, footer).
+
+   This file styles ONLY the contact form: the card, the inputs,
+   their focus/valid/invalid states, the animated error reveal,
+   and the mock success card.
+   ============================================================= */
+
+/* ---------- Form card ---------- */
+.vault-card {
+  background: linear-gradient(180deg, var(--surface), #131329);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 6px);
+  padding: clamp(1.4rem, 4vw, 2.5rem);
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- Fields ---------- */
+.vault-field { display: block; }
+
+.vault-label,
+.vault-label-row { margin-bottom: 0.5rem; }
+.vault-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.vault-label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+.vault-req { color: var(--accent-bright); }
+
+.vault-counter {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums; /* no width jitter as the count changes */
+  transition: color var(--speed) var(--ease-out);
+}
+
+.vault-input-wrap { position: relative; }
+
+.vault-input {
+  width: 100%;
+  padding: 0.85rem 2.6rem 0.85rem 1rem; /* right padding leaves room for status icon */
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 1rem;
+  /* Animate only the cheap, GPU-friendly properties — never `all`. */
+  transition: border-color var(--speed) var(--ease-out),
+              box-shadow var(--speed) var(--ease-out),
+              background-color var(--speed) var(--ease-out);
+}
+.vault-input::placeholder { color: #6b7390; }
+
+.vault-textarea {
+  resize: vertical;
+  min-height: 130px;
+  padding-right: 1rem; /* textarea shows no inline status icon */
+  line-height: 1.55;
+}
+
+/* Focus: electric-purple GLOW. */
+.vault-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #20203f;
+  box-shadow: 0 0 0 3px var(--accent-glow),            /* crisp focus ring */
+              0 0 18px 1px rgba(168, 85, 247, 0.22);   /* soft neon bloom */
+}
+
+/* ---------- Valid / invalid states (set on .vault-field by JS) ---------- */
+.vault-field.is-valid   .vault-input { border-color: color-mix(in srgb, var(--valid) 70%, var(--border)); }
+.vault-field.is-invalid .vault-input { border-color: var(--invalid); }
+
+/* Keep the focus glow color matching the state while focused */
+.vault-field.is-valid   .vault-input:focus {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25), 0 0 16px rgba(34, 197, 94, 0.18);
+  border-color: var(--valid);
+}
+.vault-field.is-invalid .vault-input:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25), 0 0 16px rgba(239, 68, 68, 0.18);
+  border-color: var(--invalid);
+}
+
+/* Inline status icon (check / cross). Hidden by default, fades in per state. */
+.vault-status-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+.vault-status-icon svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--speed) var(--ease-out),
+              transform var(--speed) var(--ease-out);
+}
+.icon-valid   { color: var(--valid); }
+.icon-invalid { color: var(--invalid); }
+.vault-field.is-valid   .icon-valid,
+.vault-field.is-invalid .icon-invalid {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.vault-field.is-valid .vault-counter { color: var(--valid-text); }
+
+/* ---------- Animated error reveal ---------- */
+/* grid-template-rows 0fr -> 1fr animates height without reserving empty
+   space and without us needing to know the message height in advance. */
+.vault-error-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms var(--ease-out);
+}
+.vault-field.is-invalid .vault-error-wrap { grid-template-rows: 1fr; }
+
+.vault-error {
+  overflow: hidden;
+  margin: 0;
+  min-height: 0; /* required so the 0fr track can fully collapse */
+  color: var(--invalid-text);
+  font-size: 0.85rem;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--speed) var(--ease-out),
+              transform var(--speed) var(--ease-out),
+              padding-top var(--speed) var(--ease-out);
+}
+.vault-field.is-invalid .vault-error {
+  opacity: 1;
+  transform: translateY(0);
+  padding-top: 0.45rem;
+}
+
+/* ---------- Submit button ---------- */
+.vault-submit {
+  margin-top: 1.75rem;
+  width: 100%;
+  padding: 0.95rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1.02rem;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -10px var(--accent-glow);
+  transition: transform 140ms var(--ease-out),
+              box-shadow var(--speed) var(--ease-out),
+              opacity var(--speed) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .vault-submit:hover:not(:disabled) {
+    box-shadow: 0 14px 34px -8px var(--accent-glow), 0 0 22px rgba(168, 85, 247, 0.35);
+  }
+}
+/* Press feedback: a subtle scale-down makes the button feel responsive. */
+.vault-submit:active:not(:disabled) { transform: scale(0.98); }
+.vault-submit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent-bright);
+}
+.vault-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.vault-formhint {
+  margin: 0.85rem 0 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Success card (mock submission) ---------- */
+.vault-success {
+  text-align: center;
+  background: linear-gradient(180deg, var(--surface), #131329);
+  border: 1px solid color-mix(in srgb, var(--valid) 35%, var(--border));
+  border-radius: calc(var(--radius) + 6px);
+  padding: clamp(2rem, 6vw, 3.25rem);
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.8);
+
+  /* Entrance — start from scale(0.96), never scale(0): nothing in the
+     real world appears from nothing. Toggled by the .is-visible class. */
+  opacity: 0;
+  transform: scale(0.96) translateY(10px);
+  transition: opacity 280ms var(--ease-out),
+              transform 280ms var(--ease-out);
+}
+.vault-success.is-visible { opacity: 1; transform: scale(1) translateY(0); }
+
+.vault-success__icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--valid);
+  background: rgba(34, 197, 94, 0.12);
+  border: 1.5px solid rgba(34, 197, 94, 0.45);
+}
+.vault-success__icon svg { width: 30px; height: 30px; }
+.vault-success__title {
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0 0 0.65rem;
+}
+.vault-success__text {
+  color: var(--text-muted);
+  max-width: 42ch;
+  margin: 0 auto 1.6rem;
+}
+.vault-success__again {
+  background: transparent;
+  color: var(--accent-bright);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.7rem 1.4rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--speed) var(--ease-out),
+              transform 140ms var(--ease-out);
+}
+.vault-success__again:active { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .vault-success__again:hover { background: rgba(168, 85, 247, 0.12); }
+}
+
+/* ---------- Reduced motion (page-specific) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .vault-success { transform: none; }
+  .vault-error { transform: none; }
+}

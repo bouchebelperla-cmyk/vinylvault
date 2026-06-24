@@ -1,0 +1,195 @@
+/* =============================================================
+   The Vinyl Vault — main.css
+   Shared design system used on EVERY page: design tokens, base
+   styles, the consistent navbar, hero primitives, buttons, and
+   the footer. Page-specific styles live in their own files.
+
+   Aesthetic: dark "OLED" music theme — deep indigo-blacks with a
+   vibrant electric-purple neon accent.
+   ============================================================= */
+
+/* ---------- Design tokens ---------- */
+:root {
+  /* Surfaces */
+  --bg:            #0f0f23;   /* page background (deep indigo-black) */
+  --surface:       #16162b;   /* card background */
+  --surface-2:     #1c1c38;   /* inputs / raised */
+  --border:        #2a2a45;   /* default borders/dividers */
+
+  /* Text */
+  --text:          #f8fafc;   /* primary text */
+  --text-muted:    #9aa3b8;   /* secondary text (>= 4.5:1 on --bg) */
+
+  /* Accent (electric purple) + semantic state colors */
+  --accent:        #a855f7;
+  --accent-bright: #c084fc;
+  --accent-glow:   rgba(168, 85, 247, 0.28);
+
+  --valid:         #22c55e;
+  --valid-text:    #4ade80;
+  --invalid:       #ef4444;
+  --invalid-text:  #f87171;
+
+  /* Motion — strong custom easing reads as more intentional than
+     the built-in CSS curves. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --speed:    180ms;
+
+  --radius:   14px;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(1100px 520px at 50% -8%, rgba(168, 85, 247, 0.16), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+main { flex: 1 0 auto; padding-bottom: 4rem; }
+
+a { color: var(--accent-bright); }
+
+/* ---------- Navigation (consistent across all pages) ---------- */
+.vault-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.9rem 0;
+  background: rgba(15, 15, 35, 0.78);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.vault-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: 1.35rem;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+.vault-brand__mark { color: var(--accent-bright); font-size: 1.2rem; }
+
+.vault-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 3vw, 1.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vault-nav__links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color var(--speed) var(--ease-out),
+              border-color var(--speed) var(--ease-out);
+}
+.vault-nav__links a.is-active { color: var(--text); border-bottom-color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .vault-nav__links a:hover { color: var(--text); }
+}
+
+/* ---------- Hero primitives (shared) ---------- */
+.vault-hero { text-align: center; padding: clamp(2.5rem, 7vw, 4.5rem) 0 2.25rem; }
+.vault-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-bright);
+  margin: 0 0 0.6rem;
+}
+.vault-title {
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: clamp(2.1rem, 6vw, 3.4rem);
+  line-height: 1.08;
+  margin: 0 0 0.85rem;
+  text-shadow: 0 0 26px rgba(168, 85, 247, 0.35); /* subtle neon glow */
+}
+.vault-subtitle {
+  max-width: 46ch;
+  margin: 0 auto;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+}
+
+/* ---------- Shared buttons ---------- */
+.vault-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.85rem 1.6rem;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 140ms var(--ease-out),
+              box-shadow var(--speed) var(--ease-out),
+              background-color var(--speed) var(--ease-out),
+              opacity var(--speed) var(--ease-out);
+}
+.vault-btn:active:not(:disabled) { transform: scale(0.98); } /* press feedback */
+.vault-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent-bright);
+}
+
+.vault-btn--primary {
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  color: #fff;
+  box-shadow: 0 10px 30px -10px var(--accent-glow);
+}
+.vault-btn--ghost {
+  background: transparent;
+  color: var(--accent-bright);
+  border: 1.5px solid var(--accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .vault-btn--primary:hover {
+    box-shadow: 0 14px 34px -8px var(--accent-glow), 0 0 22px rgba(168, 85, 247, 0.35);
+  }
+  .vault-btn--ghost:hover { background: rgba(168, 85, 247, 0.12); }
+}
+
+/* ---------- Footer ---------- */
+.vault-footer {
+  flex-shrink: 0;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.vault-footer p { margin: 0; color: var(--text-muted); font-size: 0.85rem; }
+
+/* ---------- Responsive shared ---------- */
+@media (max-width: 575.98px) {
+  .vault-nav nav { flex-direction: column; gap: 0.6rem; }
+  .vault-hero { padding-top: 2rem; }
+}
+
+/* ---------- Reduced motion (global) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

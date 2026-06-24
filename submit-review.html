@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submit an Album Review &mdash; The Vinyl Vault</title>
+  <meta name="description" content="Recommend a vinyl record to be added to The Vinyl Vault. Share the artist, album, and your review." />
+
+  <!-- Bootstrap 5 (layout/grid utilities only; all visual styling is hand-written CSS3) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <!-- Google Fonts: Righteous (display) + Poppins (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Righteous&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Hand-written styles: shared design system first, then page-specific -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/submit-review.css" />
+</head>
+<body>
+  <!-- =========================================================
+       CONSISTENT SITE NAVIGATION (shown on every page)
+       Kept simple and always-visible so it needs no extra JS
+       (the project rule is "all JS lives in ES6 classes").
+       ========================================================= -->
+  <header class="vault-nav">
+    <nav class="container d-flex align-items-center justify-content-between" aria-label="Primary">
+      <a class="vault-brand" href="index.html">
+        <span class="vault-brand__mark" aria-hidden="true">&#9210;</span>
+        The Vinyl&nbsp;Vault
+      </a>
+      <ul class="vault-nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="discover.html">Discover</a></li>
+        <li><a class="is-active" href="submit-review.html" aria-current="page">Submit&nbsp;Review</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- =========================================================
+         CUSTOM UI REQUIREMENT (assigned front-end feature):
+         "Add a contact form with styled inputs and real-time
+         validation."
+
+         How it is implemented:
+         - Inputs are styled entirely by hand (focus GLOW, VALID
+           green accent, INVALID red border + inline message).
+         - Validation runs in real time and is driven by a single
+           ES6 class, FormValidator (see js/form-validator.js).
+           Each keystroke (after a field is first touched) re-checks
+           the field, renders an accessible error below it, and
+           toggles the submit button's disabled state.
+         ========================================================= -->
+    <section class="vault-hero" aria-labelledby="page-title">
+      <p class="vault-eyebrow">Crowd-sourced crate digging</p>
+      <h1 id="page-title" class="vault-title">Submit an Album Review</h1>
+      <p class="vault-subtitle">
+        Found a record the Vault is missing? Tell us about it. Great picks get pressed
+        into the collection.
+      </p>
+    </section>
+
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8 col-xl-7">
+        <!-- The form card. novalidate disables the browser's native bubbles
+             so our custom, accessible validation UI is the single source of truth. -->
+        <form id="review-form" class="vault-card" novalidate>
+          <div class="row g-4">
+            <!-- Artist Name (required) -->
+            <div class="col-12 col-md-6">
+              <div class="vault-field" data-field="artist">
+                <label class="vault-label" for="artist">
+                  Artist Name <span class="vault-req" aria-hidden="true">*</span>
+                </label>
+                <div class="vault-input-wrap">
+                  <input
+                    class="vault-input"
+                    type="text"
+                    id="artist"
+                    name="artist"
+                    placeholder="e.g. Fleetwood Mac"
+                    autocomplete="off"
+                    required
+                    aria-required="true"
+                    aria-describedby="artist-error"
+                  />
+                  <span class="vault-status-icon" aria-hidden="true">
+                    <svg class="icon-valid" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>
+                    <svg class="icon-invalid" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+                  </span>
+                </div>
+                <!-- grid-rows wrapper enables a smooth height animation for the error -->
+                <div class="vault-error-wrap">
+                  <p class="vault-error" id="artist-error" role="alert"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Album Title (required) -->
+            <div class="col-12 col-md-6">
+              <div class="vault-field" data-field="album">
+                <label class="vault-label" for="album">
+                  Album Title <span class="vault-req" aria-hidden="true">*</span>
+                </label>
+                <div class="vault-input-wrap">
+                  <input
+                    class="vault-input"
+                    type="text"
+                    id="album"
+                    name="album"
+                    placeholder="e.g. Rumours"
+                    autocomplete="off"
+                    required
+                    aria-required="true"
+                    aria-describedby="album-error"
+                  />
+                  <span class="vault-status-icon" aria-hidden="true">
+                    <svg class="icon-valid" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>
+                    <svg class="icon-invalid" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+                  </span>
+                </div>
+                <div class="vault-error-wrap">
+                  <p class="vault-error" id="album-error" role="alert"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email (required, must be a valid email format) -->
+            <div class="col-12">
+              <div class="vault-field" data-field="email">
+                <label class="vault-label" for="email">
+                  Your Email <span class="vault-req" aria-hidden="true">*</span>
+                </label>
+                <div class="vault-input-wrap">
+                  <input
+                    class="vault-input"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    inputmode="email"
+                    required
+                    aria-required="true"
+                    aria-describedby="email-error"
+                  />
+                  <span class="vault-status-icon" aria-hidden="true">
+                    <svg class="icon-valid" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>
+                    <svg class="icon-invalid" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+                  </span>
+                </div>
+                <div class="vault-error-wrap">
+                  <p class="vault-error" id="email-error" role="alert"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Review Content (required, minimum 20 characters) -->
+            <div class="col-12">
+              <div class="vault-field" data-field="review">
+                <div class="vault-label-row">
+                  <label class="vault-label" for="review">
+                    Your Review <span class="vault-req" aria-hidden="true">*</span>
+                  </label>
+                  <!-- Live character counter; aria-hidden because the error text
+                       already communicates the requirement to screen readers. -->
+                  <span class="vault-counter" id="review-counter" aria-hidden="true">0 / 20</span>
+                </div>
+                <div class="vault-input-wrap">
+                  <textarea
+                    class="vault-input vault-textarea"
+                    id="review"
+                    name="review"
+                    rows="5"
+                    placeholder="What makes this pressing worth digging for? Sound quality, pressing, sleeve, the music itself&hellip;"
+                    required
+                    aria-required="true"
+                    aria-describedby="review-error review-counter"
+                  ></textarea>
+                </div>
+                <div class="vault-error-wrap">
+                  <p class="vault-error" id="review-error" role="alert"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="vault-submit" id="review-submit">
+            <span class="vault-submit__label">Send to the Vault</span>
+          </button>
+          <p class="vault-formhint">Fields marked <span aria-hidden="true">*</span> are required.</p>
+        </form>
+
+        <!-- Mock success state. Hidden until a valid submission occurs, then
+             the form is hidden and this card is revealed with a soft entrance. -->
+        <div class="vault-success" id="review-success" hidden aria-hidden="true" role="status" aria-live="polite">
+          <div class="vault-success__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5 11-12"/></svg>
+          </div>
+          <h2 class="vault-success__title">Thank you for your submission!</h2>
+          <p class="vault-success__text">
+            Your recommendation is in the queue. Our crate diggers will give it a spin &mdash;
+            keep an eye on the Vault.
+          </p>
+          <button type="button" class="vault-success__again" id="review-again">Submit another record</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="vault-footer">
+    <div class="container">
+      <p>&copy; 2026 The Vinyl Vault &middot; Built for crate diggers.</p>
+    </div>
+  </footer>
+
+  <!-- All page logic lives in a single ES6 class (no jQuery, no legacy syntax). -->
+  <script src="js/form-validator.js"></script>
+</body>
+</html>
