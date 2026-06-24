@@ -64,7 +64,13 @@ class AlbumGallery {
     blurb.textContent = album.blurb;
 
     meta.append(name, artist, blurb);
-    card.append(art, meta);
+
+    // ---- 3D tilt plane: art + meta ride on one inner element so the card
+    //      can lean toward the cursor while its border/shadow stay flat ----
+    const inner = document.createElement('div');
+    inner.className = 'album-card__inner';
+    inner.append(art, meta);
+    card.append(inner);
     return card;
   }
 

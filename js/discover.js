@@ -12,7 +12,7 @@
    https://www.last.fm/api/account/create
    ============================================================= */
 
-const API_KEY = 'YOUR_LASTFM_API_KEY'; // <-- replace with your key
+const API_KEY = '9d3a11d2c8cf1b846ad1ef136a21de0e'; // <-- replace with your key
 
 class AlbumDiscovery {
   constructor(apiKey) {

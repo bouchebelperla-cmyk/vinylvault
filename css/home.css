@@ -72,14 +72,18 @@
 .album-grid__noscript { grid-column: 1 / -1; text-align: center; color: var(--text-muted); }
 
 .album-card {
+  position: relative;            /* lets the hovered card lift above its neighbours */
   background: linear-gradient(180deg, var(--surface), #131329);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 0.9rem;
   cursor: pointer;
-  /* Animate only transform/box-shadow/border — cheap and jank-free. */
-  transition: transform var(--speed) var(--ease-out),
-              box-shadow var(--speed) var(--ease-out),
+  /* Establish the 3D viewing frustum for the tilting inner plane.
+     Larger = a gentler, more expensive-looking perspective. */
+  perspective: 1000px;
+  /* Animate only the cheap, compositor-friendly properties on the shell
+     itself — the transform lives on .album-card__inner below. */
+  transition: box-shadow var(--speed) var(--ease-out),
               border-color var(--speed) var(--ease-out);
 }
 .album-card:focus-visible {
@@ -88,29 +92,51 @@
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+/* The single plane that actually tilts. Keeping the rotation on a child
+   (not the card) means the border/shadow stay crisp and flat while the
+   artwork leans toward the cursor. */
+.album-card__inner {
+  position: relative;
+  border-radius: inherit;
+  /* --tilt-x / --tilt-y are written live by js/card-tilt.js on hover; with
+     JS off they stay 0 and the :hover rule supplies a fixed lean, so the
+     effect degrades gracefully to pure hand-written CSS3. */
+  transform: translateY(0)
+             rotateX(var(--tilt-x, 0deg))
+             rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;   /* carry child depth (disc/sleeve) through the tilt */
+  backface-visibility: hidden;    /* skip painting the unseen back face */
+  transition: transform var(--speed) var(--ease-out);
+}
+
 /* ---------- Hand-drawn CSS sleeve + vinyl disc ---------- */
 .album-art {
   position: relative;
   aspect-ratio: 1 / 1;
   margin-bottom: 0.85rem;
-  /* The art block clips the disc until it slides out on hover. */
-  overflow: hidden;
   border-radius: calc(var(--radius) - 4px);
+  /* No overflow:hidden — the record needs to emerge past the sleeve. The
+     sleeve, sized identically, supplies the rounded clip at rest instead. */
+  transform-style: preserve-3d;   /* sleeve and disc sit at different depths */
 }
 
-/* The vinyl record sitting behind the sleeve */
+/* The vinyl record — tucked centred behind the sleeve at rest, fully hidden. */
 .album-disc {
   position: absolute;
   top: 50%;
-  right: 14%;
-  width: 78%;
+  left: 50%;
+  width: 82%;
   aspect-ratio: 1 / 1;
-  transform: translate(0, -50%);
   border-radius: 50%;
+  /* centred, nudged a hair behind the sleeve plane in 3D space */
+  transform: translate3d(-50%, -50%, -2px) rotate(0deg);
   background:
     radial-gradient(circle at center, var(--card-accent) 0 14%, #0b0b16 14.5% 18%, #15151f 18.5% 100%);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  transition: transform 320ms var(--ease-out);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+              0 12px 24px -10px rgba(0, 0, 0, 0.85);
+  backface-visibility: hidden;
+  /* slower + springier than the tilt so the record reads as "pulling out" */
+  transition: transform 460ms var(--ease-out);
 }
 /* faint groove rings on the disc */
 .album-disc::after {
@@ -122,11 +148,12 @@
   opacity: 0.5;
 }
 
-/* The coloured cover sleeve in front */
+/* The coloured cover sleeve in front of the record */
 .album-sleeve {
   position: absolute;
   inset: 0;
   z-index: 1;
+  transform: translateZ(14px);    /* float in front of the disc in 3D space */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -134,6 +161,21 @@
   background:
     linear-gradient(150deg, color-mix(in srgb, var(--card-accent) 85%, #000), color-mix(in srgb, var(--card-accent) 35%, #0b0b16));
   border-radius: calc(var(--radius) - 4px);
+  backface-visibility: hidden;
+  overflow: hidden;               /* keep the sheen highlight inside the sleeve */
+}
+/* Pointer-tracked specular sheen — driven by --sheen-x/--sheen-y (set by
+   js/card-tilt.js), with a sensible top-light default when JS is off. As a
+   ::before it paints above the sleeve gradient but below the genre/title. */
+.album-sleeve::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--sheen-x, 50%) var(--sheen-y, 0%),
+              rgba(255, 255, 255, 0.28), transparent 52%);
+  opacity: 0;
+  transition: opacity var(--speed) var(--ease-out);
+  pointer-events: none;
 }
 .album-sleeve__genre {
   align-self: flex-start;
@@ -165,19 +207,36 @@
 .album-artist { margin: 0 0 0.5rem; color: var(--accent-bright); font-size: 0.85rem; }
 .album-blurb { margin: 0; color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
 
-/* Hover/focus: lift the card, glow, and slide the record out to the right.
-   Gated behind a real hover pointer so touch taps don't trigger it. */
+/* Hover: lift + tilt the card, glow, and slide the record out of the sleeve.
+   Gated behind a real hover pointer so touch taps never trigger it. */
 @media (hover: hover) and (pointer: fine) {
   .album-card:hover {
-    transform: translateY(-6px);
+    z-index: 5;                  /* float above neighbouring cards while tilting */
     border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-    box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.9),
-                0 0 22px -6px var(--accent-glow);
+    box-shadow: 0 22px 48px -24px rgba(0, 0, 0, 0.9),
+                0 0 26px -6px var(--accent-glow);
   }
-  .album-card:hover .album-disc { transform: translate(26%, -50%); }
+  .album-card:hover .album-card__inner {
+    /* lift + lean; the rotate defaults are the no-JS fallback, while
+       card-tilt.js overrides --tilt-x/--tilt-y with live cursor values */
+    transform: translateY(-8px)
+               rotateX(var(--tilt-x, 5deg))
+               rotateY(var(--tilt-y, -6deg));
+    will-change: transform;      /* promote to its own layer only while hovered */
+  }
+  .album-card:hover .album-disc {
+    transform: translate3d(-12%, -50%, 6px) rotate(8deg);
+  }
+  .album-card:hover .album-sleeve::before { opacity: 1; }
 }
-/* Keyboard users get the same disc reveal on focus. */
-.album-card:focus-visible .album-disc { transform: translate(26%, -50%); }
+
+/* Keyboard users get the lift + disc reveal on focus (no cursor-driven tilt),
+   on every device so it works without a hover-capable pointer. */
+.album-card:focus-visible .album-card__inner { transform: translateY(-6px); }
+.album-card:focus-visible .album-disc {
+  transform: translate3d(-12%, -50%, 6px) rotate(6deg);
+}
+.album-card:focus-visible .album-sleeve::before { opacity: 1; }
 
 /* ---------- Closing CTA ---------- */
 .home-cta {
@@ -199,7 +258,12 @@
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .album-card:hover { transform: none; }
+  /* Drop the 3D tilt, the lift, the slide-out and the sheen entirely —
+     the card simply stays put for motion-sensitive visitors. */
+  .album-card:hover .album-card__inner,
+  .album-card:focus-visible .album-card__inner { transform: none; }
   .album-card:hover .album-disc,
-  .album-card:focus-visible .album-disc { transform: translate(0, -50%); }
+  .album-card:focus-visible .album-disc { transform: translate3d(-50%, -50%, -2px); }
+  .album-card:hover .album-sleeve::before,
+  .album-card:focus-visible .album-sleeve::before { opacity: 0; }
 }
