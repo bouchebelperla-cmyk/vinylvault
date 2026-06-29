@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in &mdash; The Vinyl Vault</title>
+  <meta name="description" content="Sign in to The Vinyl Vault to rate records and post reviews." />
+
+  <!-- Bootstrap 5 (layout/grid only; visual styling is hand-written CSS3) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Righteous&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async></script>
+</head>
+<body>
+  <header class="vault-nav">
+    <nav class="container d-flex align-items-center justify-content-between" aria-label="Primary">
+      <a class="vault-brand" href="index.html">
+        <span class="vault-brand__mark" aria-hidden="true">&#9210;</span>
+        The Vinyl&nbsp;Vault
+      </a>
+      <ul class="vault-nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="discover.html">Discover</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="submit-review.html">Submit&nbsp;Review</a></li>
+        <li><a class="is-active" href="login.html" aria-current="page">Sign&nbsp;In</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="auth container" aria-labelledby="auth-title">
+      <div class="auth-head">
+        <p class="vault-eyebrow">Members area</p>
+        <h1 id="auth-title" class="auth-head__title">Sign in to the Vault</h1>
+        <p class="auth-head__sub">
+          Listeners sign in with Google to rate records and post reviews.
+          The Vault administrator signs in with credentials.
+        </p>
+      </div>
+
+      <div class="row g-4 align-items-stretch justify-content-center">
+        <!-- a) Google sign-in -->
+        <div class="col-md-5">
+          <div class="auth-card">
+            <h2 class="auth-card__title">Listeners</h2>
+            <p class="auth-card__sub">Use your Google account — no new password to remember.</p>
+            <div id="google-btn" class="google-slot"></div>
+            <p id="google-note" class="google-note" hidden>
+              <strong>Setup needed:</strong> add a Google OAuth
+              <code>Client ID</code> in <code>js/auth-manager.js</code> and serve the
+              site over <code>http://localhost</code> (Google blocks <code>file://</code>).
+              The Administrator login on the right works anywhere.
+            </p>
+          </div>
+        </div>
+
+        <!-- vertical "or" divider -->
+        <div class="col-md-1 auth-or" aria-hidden="true"><span>or</span></div>
+
+        <!-- b) Administrator credential form -->
+        <div class="col-md-5">
+          <div class="auth-card">
+            <h2 class="auth-card__title">Administrator</h2>
+            <p class="auth-card__sub">Site owner access to moderation and site settings.</p>
+
+            <form id="admin-form" novalidate>
+              <div class="auth-error" id="admin-error" role="alert" hidden></div>
+
+              <div class="field">
+                <label for="admin-user">Username</label>
+                <input id="admin-user" name="admin-user" type="text"
+                       autocomplete="username" placeholder="Admin" required />
+              </div>
+              <div class="field">
+                <label for="admin-pass">Password</label>
+                <input id="admin-pass" name="admin-pass" type="password"
+                       autocomplete="current-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required />
+              </div>
+
+              <button type="submit" class="vault-btn vault-btn--primary w-100">Sign in as Admin</button>
+              <p class="auth-hint">Demo administrator &middot; <code>Admin</code> / <code>Admin123</code></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="vault-footer">
+    <div class="container">
+      <p>&copy; 2026 The Vinyl Vault &middot; Built for crate diggers.</p>
+    </div>
+  </footer>
+
+  <script src="js/auth-manager.js"></script>
+  <script src="js/site-settings.js"></script>
+  <script src="js/login-page.js"></script>
+</body>
+</html>

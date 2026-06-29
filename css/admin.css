@@ -1,0 +1,133 @@
+/* =============================================================
+   The Vinyl Vault — Admin dashboard (admin.html)
+   Site-management panels. Review-card + star styles come from
+   css/reviews.css and css/stars.css. Requires css/main.css.
+   ============================================================= */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+.panel {
+  background: linear-gradient(180deg, var(--surface), #131329);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  padding: clamp(1.25rem, 3vw, 1.6rem);
+}
+.panel__title {
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: 1.15rem;
+  margin: 0 0 0.3rem;
+}
+.panel__hint { color: var(--text-muted); font-size: 0.86rem; margin: 0 0 1.1rem; }
+
+/* Generic dark controls inside panels */
+.panel label.control-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+.panel input[type="text"],
+.panel select,
+.panel textarea {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.93rem;
+  transition: border-color var(--speed) var(--ease-out),
+              box-shadow var(--speed) var(--ease-out);
+}
+.panel input[type="text"]:focus,
+.panel select:focus,
+.panel textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.panel select { cursor: pointer; }
+
+.control-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+}
+.control-row .vault-btn { padding: 0.6rem 1.2rem; font-size: 0.92rem; }
+.panel-status {
+  margin: 0.85rem 0 0;
+  font-size: 0.84rem;
+  color: var(--valid-text);
+}
+
+/* Toggle switch for the Album of the Week */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch__track {
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: background var(--speed) var(--ease-out), border-color var(--speed) var(--ease-out);
+}
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #cbd2e6;
+  transition: transform var(--speed) var(--ease-out), background var(--speed) var(--ease-out);
+}
+.switch input:checked + .switch__track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.switch input:checked + .switch__track::after {
+  transform: translateX(20px);
+  background: #fff;
+}
+.switch input:focus-visible + .switch__track {
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.switch__label { font-size: 0.9rem; font-weight: 500; }
+
+.aotw-preview { margin-top: 1.1rem; }
+
+/* Moderation section heading */
+.admin-reviews-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.admin-reviews-head h2 {
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  margin: 0;
+}
+.admin-reviews-head .count-pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-bright);
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+}

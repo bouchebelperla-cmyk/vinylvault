@@ -1,0 +1,121 @@
+/* =============================================================
+   The Vinyl Vault — Authentication (login.html)
+   Two-up login layout: Google sign-in + Administrator credentials.
+   Requires css/main.css.
+   ============================================================= */
+.auth {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4rem) 0;
+}
+.auth-head { text-align: center; margin-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+.auth-head__title {
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: clamp(1.9rem, 5vw, 2.7rem);
+  margin: 0.3rem 0 0.6rem;
+}
+.auth-head__sub { color: var(--text-muted); max-width: 46ch; margin: 0 auto; }
+
+/* Card shell shared by both columns */
+.auth-card {
+  height: 100%;
+  background: linear-gradient(180deg, var(--surface), #131329);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+}
+.auth-card__title {
+  font-family: "Righteous", system-ui, sans-serif;
+  font-size: 1.3rem;
+  margin: 0 0 0.35rem;
+}
+.auth-card__sub { color: var(--text-muted); font-size: 0.92rem; margin: 0 0 1.5rem; }
+
+/* Google column */
+.google-slot {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+  color-scheme: light;            /* keep Google's button chrome crisp */
+}
+.google-note {
+  margin: 1.25rem 0 0;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+.google-note code {
+  color: var(--accent-bright);
+  background: rgba(168, 85, 247, 0.12);
+  padding: 0.05rem 0.35rem;
+  border-radius: 5px;
+}
+
+/* Administrator form */
+.field { margin-bottom: 1rem; }
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+.field input {
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color var(--speed) var(--ease-out),
+              box-shadow var(--speed) var(--ease-out);
+}
+.field input::placeholder { color: #5b6480; }
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.auth-error {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.88rem;
+  color: var(--invalid-text);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+}
+.auth-hint {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.auth-hint code {
+  color: var(--accent-bright);
+  background: rgba(168, 85, 247, 0.12);
+  padding: 0.05rem 0.4rem;
+  border-radius: 5px;
+}
+
+/* Vertical "or" divider between the two columns (desktop only) */
+.auth-or {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+@media (max-width: 767.98px) {
+  .auth-or { padding: 0.75rem 0; }
+}

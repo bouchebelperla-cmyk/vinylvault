@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Control Panel &mdash; The Vinyl Vault</title>
+  <meta name="description" content="Administrator dashboard: moderate reviews and manage site settings." />
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Righteous&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/stars.css" />
+  <link rel="stylesheet" href="css/reviews.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <header class="vault-nav">
+    <nav class="container d-flex align-items-center justify-content-between" aria-label="Primary">
+      <a class="vault-brand" href="index.html">
+        <span class="vault-brand__mark" aria-hidden="true">&#9210;</span>
+        The Vinyl&nbsp;Vault
+      </a>
+      <ul class="vault-nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="discover.html">Discover</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="submit-review.html">Submit&nbsp;Review</a></li>
+        <li><a href="login.html">Sign&nbsp;In</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container" aria-labelledby="admin-title">
+      <div class="page-band">
+        <div>
+          <h1 id="admin-title" class="page-band__title">Admin Control Panel</h1>
+          <p class="page-band__sub">Moderate community reviews and manage the site spotlight.</p>
+        </div>
+        <div class="page-who">
+          <span>Signed in as <strong class="page-who__name">Admin</strong></span>
+          <button type="button" class="vault-btn vault-btn--ghost" data-signout>Sign out</button>
+        </div>
+      </div>
+
+      <!-- ===== Site management ===== -->
+      <div class="admin-grid">
+        <!-- Global announcement banner -->
+        <section class="panel" aria-labelledby="announce-h">
+          <h2 id="announce-h" class="panel__title">Announcement banner</h2>
+          <p class="panel__hint">Shows instantly across the top of every page. Leave empty to hide it.</p>
+          <form id="announce-form" novalidate>
+            <label class="control-label" for="announce-input">Banner message</label>
+            <input id="announce-input" type="text" maxlength="140"
+                   placeholder="e.g. New arrivals just added to the Vault — free shipping this week!" />
+            <div class="control-row">
+              <button type="submit" class="vault-btn vault-btn--primary">Update banner</button>
+              <button type="button" id="announce-clear" class="vault-btn vault-btn--ghost">Clear</button>
+            </div>
+            <p id="announce-status" class="panel-status" role="status" hidden></p>
+          </form>
+        </section>
+
+        <!-- Album of the Week -->
+        <section class="panel" aria-labelledby="aotw-h">
+          <h2 id="aotw-h" class="panel__title">Album of the Week</h2>
+          <p class="panel__hint">Spotlight one curated record at the top of the Reviews page.</p>
+
+          <label class="control-label" for="aotw-select">Pick an album</label>
+          <select id="aotw-select" aria-label="Album of the Week"></select>
+
+          <label class="switch">
+            <input type="checkbox" id="aotw-toggle" />
+            <span class="switch__track" aria-hidden="true"></span>
+            <span class="switch__label">Show spotlight</span>
+          </label>
+
+          <div id="aotw-preview" class="aotw aotw-preview" aria-label="Spotlight preview" hidden></div>
+        </section>
+      </div>
+
+      <!-- ===== Review moderation ===== -->
+      <div class="admin-reviews-head">
+        <h2>All reviews</h2>
+        <span class="count-pill"><span id="review-count">0</span> total</span>
+      </div>
+      <div id="admin-review-list" class="review-list" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="vault-footer">
+    <div class="container">
+      <p>&copy; 2026 The Vinyl Vault &middot; Built for crate diggers.</p>
+    </div>
+  </footer>
+
+  <!-- Curated data (for the Album-of-the-Week picker), then the ES6 classes. -->
+  <script src="js/data/albums.js"></script>
+  <script src="js/auth-manager.js"></script>
+  <script src="js/star-rating.js"></script>
+  <script src="js/review-engine.js"></script>
+  <script src="js/site-settings.js"></script>
+  <script src="js/admin-page.js"></script>
+</body>
+</html>

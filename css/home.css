@@ -171,12 +171,34 @@
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;                      /* sheen sits above the cover art */
   background: radial-gradient(circle at var(--sheen-x, 50%) var(--sheen-y, 0%),
               rgba(255, 255, 255, 0.28), transparent 52%);
   opacity: 0;
   transition: opacity var(--speed) var(--ease-out);
   pointer-events: none;
 }
+
+/* Real album cover (fetched live from Last.fm by AlbumGallery). It fades in
+   over the hand-drawn sleeve, which stays as the loading + offline fallback. */
+.album-sleeve__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 0;                      /* above the gradient, below sheen + genre chip */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out);
+  backface-visibility: hidden;
+}
+.album-art.has-cover .album-sleeve__cover { opacity: 1; }
+/* With real art showing, the hand-drawn title is redundant (the cover has it) —
+   hide it and let just the genre chip float over the cover. */
+.album-art.has-cover .album-sleeve__title { display: none; }
+.album-sleeve__genre,
+.album-sleeve__title { position: relative; z-index: 2; }
 .album-sleeve__genre {
   align-self: flex-start;
   font-size: 0.68rem;

@@ -171,6 +171,24 @@ a { color: var(--accent-bright); }
   .vault-btn--ghost:hover { background: rgba(168, 85, 247, 0.12); }
 }
 
+/* ---------- Global announcement banner (admin-controlled) ----------
+   Injected at the very top of <body> by SiteSettings on every page that
+   mounts it; collapses when the admin clears the message. */
+.vault-announce {
+  position: relative;
+  z-index: 200;
+  text-align: center;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  box-shadow: 0 6px 18px -10px var(--accent-glow);
+}
+.vault-announce::before { content: "📣 "; }
+.vault-announce.is-empty { display: none; }
+
 /* ---------- Footer ---------- */
 .vault-footer {
   flex-shrink: 0;

@@ -1,0 +1,42 @@
+/* =============================================================
+   The Vinyl Vault — Star rating widget (shared)
+   Used by the review form (interactive) and review cards (static).
+   Requires the design tokens in css/main.css.
+   ============================================================= */
+.star-rating {
+  display: inline-flex;
+  gap: 0.15rem;
+  line-height: 1;
+}
+.star-rating__star {
+  background: none;
+  border: none;
+  padding: 0 1px;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #3a3a55;                 /* empty star */
+  cursor: pointer;
+  transition: color 120ms var(--ease-out), transform 120ms var(--ease-out);
+}
+.star-rating__star.is-on { color: #f5c518; }   /* gold */
+.star-rating__star:focus-visible {
+  outline: none;
+  color: #f5c518;
+  box-shadow: 0 0 0 2px var(--accent-glow);
+  border-radius: 5px;
+}
+@media (hover: hover) and (pointer: fine) {
+  button.star-rating__star:hover { transform: scale(1.14); }
+}
+
+/* Read-only variant inside review cards */
+.star-rating--static { gap: 0.05rem; }
+.star-rating--static .star-rating__star {
+  font-size: 1.05rem;
+  cursor: default;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.star-rating__star:hover { transform: none; }
+}
